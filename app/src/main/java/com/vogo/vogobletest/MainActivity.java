@@ -146,8 +146,35 @@ public class MainActivity extends AppCompatActivity {
             "  {\n" +
             "    \"mac\": \"18:62:E4:3E:0E:EC\",\n" +
             "    \"BoardNumber\": \"L306\"\n" +
-            "  }\n" +
-            "]}";
+            "  },\n" +
+            "{\n" +
+            "    \"mac\": \"0C:B2:B7:7B:B8:E6\",\n" +
+            "    \"BoardNumber\": \"G163\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"0C:B2:B7:7B:BC:C1\",\n" +
+            "    \"BoardNumber\": \"L663\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"0C:B2:B7:7B:C5:72\",\n" +
+            "    \"BoardNumber\": \"L808\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"0C:B2:B7:7B:C5:12\",\n" +
+            "    \"BoardNumber\": \"G275\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"18:62:E4:3C:8E:CC\",\n" +
+            "    \"BoardNumber\": \"L583\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"0C:B2:B7:79:CB:4C\",\n" +
+            "    \"BoardNumber\": \"L279\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"34:03:DE:1C:60FE\",\n" +
+            "    \"BoardNumber\": \"L236\"\n" +
+            "  }]}";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

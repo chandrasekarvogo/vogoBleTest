@@ -157,6 +157,7 @@ public class BLEConnection extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         boxNumber = bundle.getString("mBoxNo");
         macAddress = bundle.getString("mAddress");
+        Log.d("check mac",macAddress);
         tvBox = (TextView) findViewById(R.id.boxTv);
         tvMac = (TextView) findViewById(R.id.macTv);
         tvStatus = (TextView) findViewById(R.id.statusTv);
