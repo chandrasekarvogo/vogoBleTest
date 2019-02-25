@@ -449,15 +449,27 @@ public class BLEConnection extends AppCompatActivity {
             Toast.makeText(this,stringExtra + "Success",Toast.LENGTH_LONG).show();
             showDialog("Success");
             Log.d("BLE", "done");
-        } else if(stringExtra.equalsIgnoreCase("400")) {
-             showDialog("Please Properly Lock Dicky");
+        }
+         else if(stringExtra.equalsIgnoreCase("40")) {
+             Toast.makeText(this,stringExtra + "Success",Toast.LENGTH_LONG).show();
+             showDialog("Success");
+             Log.d("BLE", "done");
+         }
+         else if(stringExtra.equalsIgnoreCase("400")) {
+             // showDialog("Please Properly Lock Dicky");
+             showDialog("Success");
          }
          else if(stringExtra.equalsIgnoreCase("411")){
              showDialog("Please Turn off ignition");
 
          }
+         else if(stringExtra.equalsIgnoreCase("41")){
+             showDialog("Please Turn off ignition");
+
+         }
          else if(stringExtra.equalsIgnoreCase("410")){
-             showDialog("Please Turn off ignition and lock the seat");
+             showDialog("Please Turn off ignition");
+//             showDialog("Please Turn off ignition and lock the seat");
          }
     }
     Runnable r = new Runnable() {
