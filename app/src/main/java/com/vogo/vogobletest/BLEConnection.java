@@ -49,7 +49,7 @@ public class BLEConnection extends AppCompatActivity {
     String cmdSeatLockOpen;
     String cmdEndRide;
     TextView tvBox, tvMac, tvStatus;
-    Button btnStart,btnEnd,btnStop,btnSeat;
+    Button btnStart,btnEnd;
     private ProgressDialog dialog;
 
 
@@ -163,8 +163,6 @@ public class BLEConnection extends AppCompatActivity {
         tvStatus = (TextView) findViewById(R.id.statusTv);
         btnStart = (Button)findViewById(R.id.start);
         btnEnd = (Button) findViewById(R.id.end);
-        btnStop = (Button) findViewById(R.id.stop);
-        btnSeat = (Button) findViewById(R.id.seat);
         dialog = new ProgressDialog(this);
         if(!hasPermissions(this, PERMISSIONS)){
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
@@ -181,7 +179,7 @@ public class BLEConnection extends AppCompatActivity {
 
         tvBox.setText(boxNumber);
         tvMac.setText(macAddress);
-        sharedPreferences = getApplicationContext().getSharedPreferences("com.vogo.vogobletest",MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("com.vogo.vogobletestic",MODE_PRIVATE);
         blePass = sharedPreferences.getString(Constants.BLE_PASS,Config.DEFAULT_PASS);
         cmdIgnitionOn = sharedPreferences.getString(Constants.IGNITION_ON,Config.DEFAULT_IGNITION_ON);
         cmdIgnitionOff = sharedPreferences.getString(Constants.IGNITION_OFF,Config.DEFAULT_IGNITION_OFF);
@@ -201,31 +199,8 @@ public class BLEConnection extends AppCompatActivity {
                 scanLeDevice(true);
             }
         });
-        btnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cmdBLE = cmdIgnitionOff;
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                dialog.setMessage("Connecting");
-                dialog.show();
-                scanLeDevice(true);
-            }
-        });
 
-        btnSeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            cmdBLE = cmdSeatLockOpen;
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                dialog.setMessage("Connecting");
-                dialog.show();
-            scanLeDevice(true);
-            }
-        });
+
 
         btnEnd.setOnClickListener(new View.OnClickListener() {
             @Override
