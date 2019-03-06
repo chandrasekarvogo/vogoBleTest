@@ -32,6 +32,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,8 +51,9 @@ public class BLEConnection extends AppCompatActivity {
     String cmdEndRide;
     TextView tvBox, tvMac, tvStatus;
     Button btnStart,btnEnd,btnStop,btnSeat;
+    EditText etDelay;
     private ProgressDialog dialog;
-
+    int millis = 100; //default
 
 
     public final static String ACTION_GATT_CONNECTED =
@@ -165,6 +167,7 @@ public class BLEConnection extends AppCompatActivity {
         btnEnd = (Button) findViewById(R.id.end);
         btnStop = (Button) findViewById(R.id.stop);
         btnSeat = (Button) findViewById(R.id.seat);
+        etDelay = (EditText) findViewById(R.id.etDelay);
         dialog = new ProgressDialog(this);
         if(!hasPermissions(this, PERMISSIONS)){
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
@@ -181,6 +184,7 @@ public class BLEConnection extends AppCompatActivity {
 
         tvBox.setText(boxNumber);
         tvMac.setText(macAddress);
+        etDelay.setText(String.valueOf(millis));
         sharedPreferences = getApplicationContext().getSharedPreferences("com.vogo.vogobletest",MODE_PRIVATE);
         blePass = sharedPreferences.getString(Constants.BLE_PASS,Config.DEFAULT_PASS);
         cmdIgnitionOn = sharedPreferences.getString(Constants.IGNITION_ON,Config.DEFAULT_IGNITION_ON);
@@ -513,7 +517,13 @@ public class BLEConnection extends AppCompatActivity {
             Log.w("BLE", "Send characteristic not found");
             return false;
         }
+        try{
+            String delay = etDelay.getText().toString().trim().replaceAll("[^0-9]", "");
+            millis = Integer.valueOf(!delay.contentEquals("")?delay:"100");
+            Thread.sleep(millis);}
+        catch(InterruptedException e){
 
+        }
         characteristic.setValue(data);
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         return mGatt.writeCharacteristic(characteristic);
