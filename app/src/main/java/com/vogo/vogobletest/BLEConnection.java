@@ -32,6 +32,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +80,8 @@ public class BLEConnection extends AppCompatActivity {
     private List<ScanFilter> filters;
     private BluetoothGatt mGatt;
     int PERMISSION_ALL = 1;
+    int millis = 100; //default
+    EditText etDelay;
     String[] PERMISSIONS = {
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.BLUETOOTH
@@ -164,6 +167,8 @@ public class BLEConnection extends AppCompatActivity {
         btnStart = (Button)findViewById(R.id.start);
         btnEnd = (Button) findViewById(R.id.end);
         dialog = new ProgressDialog(this);
+        etDelay = (EditText) findViewById(R.id.etDelay);
+        etDelay.setText(String.valueOf(millis));
         if(!hasPermissions(this, PERMISSIONS)){
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
@@ -488,7 +493,13 @@ public class BLEConnection extends AppCompatActivity {
             Log.w("BLE", "Send characteristic not found");
             return false;
         }
+        try{
+            String delay = etDelay.getText().toString().trim().replaceAll("[^0-9]", "");
+            millis = Integer.valueOf(!delay.contentEquals("")?delay:"100");
+            Thread.sleep(millis);}
+        catch(InterruptedException e){
 
+        }
         characteristic.setValue(data);
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         return mGatt.writeCharacteristic(characteristic);
