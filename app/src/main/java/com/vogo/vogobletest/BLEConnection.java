@@ -185,7 +185,7 @@ public class BLEConnection extends AppCompatActivity {
         tvBox.setText(boxNumber);
         tvMac.setText(macAddress);
       //  etDelay.setText(String.valueOf(millis));
-        sharedPreferences = getApplicationContext().getSharedPreferences("com.vogo.vogobletest",MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("com.vogo.vogobletest3",MODE_PRIVATE);
         blePass = sharedPreferences.getString(Constants.BLE_PASS,Config.DEFAULT_PASS);
         cmdIgnitionOn = sharedPreferences.getString(Constants.IGNITION_ON,Config.DEFAULT_IGNITION_ON);
         cmdIgnitionOff = sharedPreferences.getString(Constants.IGNITION_OFF,Config.DEFAULT_IGNITION_OFF);
