@@ -29,17 +29,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import java.io.BufferedReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class BLEConnection extends AppCompatActivity {
     String boxNumber;
@@ -50,7 +58,20 @@ public class BLEConnection extends AppCompatActivity {
     String cmdSeatLockOpen;
     String cmdEndRide;
     TextView tvBox, tvMac, tvStatus;
-    Button btnStart,btnEnd,btnStop,btnSeat;
+    Button btnStart;
+    EditText etStartTx,etStartRx;
+    Button btnEnd;
+    EditText etEndTx,etEndRx;
+    Button btnStop;
+    EditText etStopTx,etStopRx;
+    Button btnSeat;
+    EditText etSeatTx,etSeatRx;
+    Button bootSpace;
+    EditText etBootTx,etBootRx;
+    Button dataSend;
+    EditText etData;
+
+    TextView tvAssembled,tvReply,tvDatalimit;
 //    EditText etDelay;
     private ProgressDialog dialog;
     int millis = 100; //default
@@ -81,16 +102,22 @@ public class BLEConnection extends AppCompatActivity {
     private List<ScanFilter> filters;
     private BluetoothGatt mGatt;
     int PERMISSION_ALL = 1;
+    int MODE = 0;
     String[] PERMISSIONS = {
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.BLUETOOTH
     };
     //Button toggle;
     boolean isunlocked = true;
-    private String cmdBLE;
+    private String cmdBLE,cmdBLERx="";
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
 
     private ScanCallback mScanCallback;
+
+
+    private ToggleButton toggleButton;
+    private LinearLayout dataModeLayout;
+
 
 
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
@@ -167,8 +194,48 @@ public class BLEConnection extends AppCompatActivity {
         btnEnd = (Button) findViewById(R.id.end);
         btnStop = (Button) findViewById(R.id.stop);
         btnSeat = (Button) findViewById(R.id.seat);
+        bootSpace = (Button) findViewById(R.id.boot);
+        dataSend = (Button) findViewById(R.id.btn_send);
         //etDelay = (EditText) findViewById(R.id.etDelay);
         dialog = new ProgressDialog(this);
+        toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        dataModeLayout =  (LinearLayout) findViewById(R.id.layoutData);
+
+        etStartTx = getView(R.id.etStartTx);
+        etStartRx = getView(R.id.etStartRx);
+
+        etEndRx = getView(R.id.etEndRx);
+        etEndTx = getView(R.id.etEndTx);
+
+        etBootRx = getView(R.id.etBootRx);
+        etBootTx = getView(R.id.etBootTx);
+
+        etSeatRx = getView(R.id.etSeatRx);
+        etSeatTx = getView(R.id.etSeatTx);
+
+        etStopTx = getView(R.id.etStopTx);
+        etStopRx  =getView(R.id.etStopRx);
+
+        etData = getView(R.id.etData);
+        tvAssembled = (TextView) findViewById(R.id.assembleTv);
+        tvReply = (TextView) findViewById(R.id.replyTv);
+        tvDatalimit = (TextView) findViewById(R.id.datalimitTV);
+
+
+
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    dataModeLayout.setVisibility(View.VISIBLE);
+                    MODE =1;
+                } else {
+                    // The toggle is disabled
+                    dataModeLayout.setVisibility(View.INVISIBLE);
+                    MODE =0;
+                }
+            }
+        });
+
         if(!hasPermissions(this, PERMISSIONS)){
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
@@ -191,60 +258,174 @@ public class BLEConnection extends AppCompatActivity {
         cmdIgnitionOff = sharedPreferences.getString(Constants.IGNITION_OFF,Config.DEFAULT_IGNITION_OFF);
         cmdSeatLockOpen = sharedPreferences.getString(Constants.SEAT_OPEN,Config.DEFAULT_SEAT_OPEN);
         cmdEndRide = sharedPreferences.getString(Constants.END_RIDE,Config.DEFAULT_END_RIDE);
-
+        intialize();
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String tx = etStartTx.getText().toString();
+                String rx = etStartRx.getText().toString();
+                if(!tx.contentEquals("") && !rx.contentEquals("")){
                 Log.d("BLE","start");
-                cmdBLE = cmdIgnitionOn;
+                cmdBLE = assembleString(MODE,tx,rx);
+                cmdBLERx  = "0x"+rx;
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
                 scanLeDevice(true);
+            }
             }
         });
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cmdBLE = cmdIgnitionOff;
+                String tx = etStopTx.getText().toString();
+                String rx = etStopRx.getText().toString();
+                if(!tx.contentEquals("") && !rx.contentEquals("")){
+                    cmdBLE = assembleString(MODE,tx,rx);
+                    cmdBLERx  = "0x"+rx;
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
                 scanLeDevice(true);
-            }
+            }}
         });
 
         btnSeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            cmdBLE = cmdSeatLockOpen;
+                String tx = etSeatTx.getText().toString();
+                String rx = etSeatRx.getText().toString();
+                if(!tx.contentEquals("") && !rx.contentEquals("")){
+                    cmdBLE = assembleString(MODE,tx,rx);
+                    cmdBLERx  = "0x"+rx;
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
             scanLeDevice(true);
-            }
+            }}
         });
 
         btnEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cmdBLE = cmdEndRide;
+                String tx = etEndTx.getText().toString();
+                String rx = etEndRx.getText().toString();
+                if(!tx.contentEquals("") && !rx.contentEquals("")){
+                    cmdBLE = assembleString(MODE,tx,rx);
+                    cmdBLERx  = "0x"+rx;
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
                 scanLeDevice(true);
+            }}
+        });
+
+        bootSpace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tx = etBootTx.getText().toString();
+                String rx = etBootRx.getText().toString();
+                if(!tx.contentEquals("") && !rx.contentEquals("")){
+                    cmdBLE = assembleString(MODE,tx,rx);
+                    cmdBLERx  = "0x"+rx;
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    dialog.setMessage("Connecting");
+                    dialog.show();
+                    scanLeDevice(true);
+                }
             }
         });
 
+        dataSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tx = etData.getText().toString();
+                String rx="";
+                int datacount = sharedPreferences.getInt(Settings.DATA_LENGTH, 4);
+                if(datacount<9){
+                    rx="0x0"+datacount;
+                }
+                else{
+                    rx="0x"+datacount;
+                }
+                if(!tx.contentEquals("") && !rx.contentEquals("")){
+                    cmdBLE = assembleString(MODE,tx,rx);
+                    //cmdBLERx  = "0x"+rx;
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    dialog.setMessage("Connecting");
+                    dialog.show();
+                    scanLeDevice(true);
+                }
+            }
+        });
+    }
 
+    private String assembleString(int mode, String txData, String rxData){
+        StringBuilder sb = new StringBuilder();
+        sb.append("0x"+sharedPreferences.getString(Settings.START_BYTE,"24")+" ");
+
+        if(mode==0){
+            sb.append("0x"+sharedPreferences.getString(Settings.COMMAND_BYTE,"63")+" ");
+            sb.append("0x"+txData+" ");
+        }
+        else{
+            sb.append("0x"+sharedPreferences.getString(Settings.DATA_BYTE,"62")+" ");
+            sb.append(rxData+" ");
+            for(String s: txData.split(" "))
+                sb.append("0x"+s+" ");
+        }
+
+
+        if(mode==0)
+            sb.append("0x"+rxData+" ");
+        sb.append("0x"+sharedPreferences.getString(Settings.END_BYTE,"3B")+" ");
+        tvAssembled.setText(sb.toString());
+        return sb.toString();
+    }
+
+    private void intialize() {
+        etStartTx.setText("41");
+        etStartRx.setText("2A");
+        etStopTx.setText("42");
+        etStopRx.setText("2B");
+        etSeatTx.setText("44");
+        etSeatRx.setText("2D");
+        etEndTx.setText("45");
+        etEndRx.setText("2E");
+        etBootTx.setText("43");
+        etBootRx.setText("2C");
+        tvDatalimit.setText(String.format("You can send upto %s data", String.valueOf(sharedPreferences.getInt(Settings.DATA_LENGTH, 4))));
+        InputFilter filter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; ++i)
+                {
+                    if (!Pattern.compile("[ABCDEF1234567890 ]*").matcher(String.valueOf(source.charAt(i))).matches())
+                    {
+                        return "";
+                    }
+                }
+
+                return null;
+            }
+        };
+        etData.setFilters(new InputFilter[]{filter,new InputFilter.LengthFilter(sharedPreferences.getInt(Settings.DATA_LENGTH, 4)*2 + (sharedPreferences.getInt(Settings.DATA_LENGTH, 4)-1))});
+    }
+
+    private EditText getView(int id) {
+        return (EditText) findViewById(id);
     }
 
     private void prepareBLE() {
@@ -397,8 +578,10 @@ public class BLEConnection extends AppCompatActivity {
                     @Override
                     public void run() {
                          // disconnect from BLE
+                        deleteBondInformation(mGatt.getDevice());
+                        close();
                     }
-                },20000);
+                },(sharedPreferences.getInt(Settings.TIMEOUT,1000*20)>1000*20?sharedPreferences.getInt(Settings.TIMEOUT,1000*20):1000*20));
                 //  toggle.setEnabled(true);
             } else if (ACTION_GATT_DISCONNECTED.equals(action)) {
                 Toast.makeText(getApplicationContext(),"Disconnected",Toast.LENGTH_LONG).show();
@@ -449,6 +632,11 @@ public class BLEConnection extends AppCompatActivity {
 
         Log.d("BLE readings", stringExtra
         );
+        tvReply.setText(stringExtra);
+
+        if(cmdBLERx.contentEquals(stringExtra)){
+            showDialog("Success");
+        }
          if(stringExtra.equalsIgnoreCase("401")) {
             Toast.makeText(this,stringExtra + "Success",Toast.LENGTH_LONG).show();
             showDialog("Success");
@@ -517,13 +705,12 @@ public class BLEConnection extends AppCompatActivity {
             Log.w("BLE", "Send characteristic not found");
             return false;
         }
-//        try{
-//            String delay = etDelay.getText().toString().trim().replaceAll("[^0-9]", "");
-//            millis = Integer.valueOf(!delay.contentEquals("")?delay:"100");
-//            Thread.sleep(millis);}
-//        catch(InterruptedException e){
-//
-//        }
+        try{
+             millis =sharedPreferences.getInt(Settings.DELAY,100);
+            Thread.sleep(millis);}
+        catch(InterruptedException e){
+
+        }
         characteristic.setValue(data);
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         return mGatt.writeCharacteristic(characteristic);
