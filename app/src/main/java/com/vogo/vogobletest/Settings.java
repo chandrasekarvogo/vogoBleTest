@@ -17,6 +17,7 @@ public class Settings extends AppCompatActivity {
     public static final String DELAY = "delay";
     public static final String TIMEOUT = "timeout";
     public static final String DATA_LENGTH = "dataLength";
+    public static final String RETRY = "retry";
     SharedPreferences sharedPreferences;
     private static final String HEX_PREFIX = "0x";
     private EditText startByte;
@@ -26,6 +27,7 @@ public class Settings extends AppCompatActivity {
     private EditText delay;
     private EditText timeout;
     private EditText datalength;
+    private EditText retry;
     private Button btnSave;
     private Context context;
     @Override
@@ -40,6 +42,8 @@ public class Settings extends AppCompatActivity {
         delay = (EditText) findViewById(R.id.delayET);
         timeout = (EditText)findViewById(R.id.timeoutET);
         datalength = (EditText)findViewById(R.id.dataLengthET);
+        retry = (EditText) findViewById(R.id.retryET);
+
         btnSave = (Button) findViewById(R.id.saveBtn);
         context = this;
         loadValues(sharedPreferences);
@@ -53,6 +57,7 @@ public class Settings extends AppCompatActivity {
                 sharedPreferences.edit().putInt(DELAY, Integer.parseInt(delay.getText().toString().trim().replaceAll("[^0-9]", ""))).apply();
                 sharedPreferences.edit().putInt(TIMEOUT, Integer.parseInt(timeout.getText().toString().trim().replaceAll("[^0-9]", ""))).apply();
                 sharedPreferences.edit().putInt(DATA_LENGTH,Integer.parseInt(datalength.getText().toString().trim().replaceAll("[^0-9]", ""))).apply();
+                sharedPreferences.edit().putInt(RETRY,Integer.parseInt(retry.getText().toString().trim().replaceAll("[^0-9]", ""))).apply();
                 Toast.makeText(context,"Saved",Toast.LENGTH_SHORT).show();
             }
         });
@@ -69,7 +74,7 @@ public class Settings extends AppCompatActivity {
         delay.setText(String.valueOf(sharedPreferences.getInt(DELAY,100)));
         timeout.setText(String.valueOf(sharedPreferences.getInt(TIMEOUT,1000*20)));
         datalength.setText(String.valueOf(sharedPreferences.getInt(DATA_LENGTH,4)));
-
+        retry.setText(String.valueOf(sharedPreferences.getInt(RETRY,1)));
     }
 
 

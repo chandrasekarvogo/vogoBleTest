@@ -113,8 +113,8 @@ public class BLEConnection extends AppCompatActivity {
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
 
     private ScanCallback mScanCallback;
-
-
+    int retry = 1,retryCount = 0;
+    boolean isRetry = true;
     private ToggleButton toggleButton;
     private LinearLayout dataModeLayout;
 
@@ -258,6 +258,7 @@ public class BLEConnection extends AppCompatActivity {
         cmdIgnitionOff = sharedPreferences.getString(Constants.IGNITION_OFF,Config.DEFAULT_IGNITION_OFF);
         cmdSeatLockOpen = sharedPreferences.getString(Constants.SEAT_OPEN,Config.DEFAULT_SEAT_OPEN);
         cmdEndRide = sharedPreferences.getString(Constants.END_RIDE,Config.DEFAULT_END_RIDE);
+        retry = sharedPreferences.getInt(Settings.RETRY,1);
         intialize();
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,12 +268,14 @@ public class BLEConnection extends AppCompatActivity {
                 if(!tx.contentEquals("") && !rx.contentEquals("")){
                 Log.d("BLE","start");
                 cmdBLE = assembleString(MODE,tx,rx);
-                cmdBLERx  = "0x"+rx;
+                cmdBLERx  = String.valueOf(toAscii(rx));
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
+                isRetry = true;
+                retryCount = 0;
                 scanLeDevice(true);
             }
             }
@@ -284,12 +287,14 @@ public class BLEConnection extends AppCompatActivity {
                 String rx = etStopRx.getText().toString();
                 if(!tx.contentEquals("") && !rx.contentEquals("")){
                     cmdBLE = assembleString(MODE,tx,rx);
-                    cmdBLERx  = "0x"+rx;
+                    cmdBLERx  = String.valueOf(toAscii(rx));
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
+                    isRetry = true;
+                    retryCount = 0;
                 scanLeDevice(true);
             }}
         });
@@ -301,12 +306,14 @@ public class BLEConnection extends AppCompatActivity {
                 String rx = etSeatRx.getText().toString();
                 if(!tx.contentEquals("") && !rx.contentEquals("")){
                     cmdBLE = assembleString(MODE,tx,rx);
-                    cmdBLERx  = "0x"+rx;
+                    cmdBLERx  = String.valueOf(toAscii(rx));
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
+                isRetry = true;
+                retryCount = 0;
             scanLeDevice(true);
             }}
         });
@@ -318,12 +325,14 @@ public class BLEConnection extends AppCompatActivity {
                 String rx = etEndRx.getText().toString();
                 if(!tx.contentEquals("") && !rx.contentEquals("")){
                     cmdBLE = assembleString(MODE,tx,rx);
-                    cmdBLERx  = "0x"+rx;
+                    cmdBLERx  = String.valueOf(toAscii(rx));
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
+                isRetry = true;
+                retryCount = 0;
                 scanLeDevice(true);
             }}
         });
@@ -335,12 +344,14 @@ public class BLEConnection extends AppCompatActivity {
                 String rx = etBootRx.getText().toString();
                 if(!tx.contentEquals("") && !rx.contentEquals("")){
                     cmdBLE = assembleString(MODE,tx,rx);
-                    cmdBLERx  = "0x"+rx;
+                    cmdBLERx  = String.valueOf(toAscii(rx));
                     if (dialog.isShowing()) {
                         dialog.dismiss();
                     }
                     dialog.setMessage("Connecting");
                     dialog.show();
+                    isRetry = true;
+                    retryCount = 0;
                     scanLeDevice(true);
                 }
             }
@@ -353,44 +364,52 @@ public class BLEConnection extends AppCompatActivity {
                 String rx="";
                 int datacount = sharedPreferences.getInt(Settings.DATA_LENGTH, 4);
                 if(datacount<9){
-                    rx="0x0"+datacount;
+                    rx="0"+datacount;
                 }
                 else{
-                    rx="0x"+datacount;
+                    rx=""+datacount;
                 }
                 if(!tx.contentEquals("") && !rx.contentEquals("")){
                     cmdBLE = assembleString(MODE,tx,rx);
-                    //cmdBLERx  = "0x"+rx;
+                    //cmdBLERx  = rx;
                     if (dialog.isShowing()) {
                         dialog.dismiss();
                     }
                     dialog.setMessage("Connecting");
                     dialog.show();
+                    isRetry = true;
+                    retryCount = 0;
                     scanLeDevice(true);
                 }
             }
         });
     }
 
+    private char toAscii(String in){
+        return (char)Integer.parseInt(in,16);
+    }
+
     private String assembleString(int mode, String txData, String rxData){
         StringBuilder sb = new StringBuilder();
-        sb.append("0x"+sharedPreferences.getString(Settings.START_BYTE,"24")+" ");
+        sb.append(toAscii(sharedPreferences.getString(Settings.START_BYTE,"24")));
 
         if(mode==0){
-            sb.append("0x"+sharedPreferences.getString(Settings.COMMAND_BYTE,"63")+" ");
-            sb.append("0x"+txData+" ");
+            sb.append(toAscii(sharedPreferences.getString(Settings.COMMAND_BYTE,"63")));
+            sb.append(toAscii(txData));
         }
         else{
-            sb.append("0x"+sharedPreferences.getString(Settings.DATA_BYTE,"62")+" ");
-            sb.append(rxData+" ");
+            sb.append(toAscii(sharedPreferences.getString(Settings.DATA_BYTE,"62")));
+            sb.append(toAscii(rxData));
             for(String s: txData.split(" "))
-                sb.append("0x"+s+" ");
+                sb.append(toAscii(s));
         }
 
 
         if(mode==0)
-            sb.append("0x"+rxData+" ");
-        sb.append("0x"+sharedPreferences.getString(Settings.END_BYTE,"3B")+" ");
+            sb.append(toAscii(rxData));
+        sb.append(toAscii(sharedPreferences.getString(Settings.END_BYTE,"3B")));
+
+
         tvAssembled.setText(sb.toString());
         return sb.toString();
     }
@@ -574,6 +593,8 @@ public class BLEConnection extends AppCompatActivity {
             if (ACTION_GATT_CONNECTED.equals(action)) {
                 Toast.makeText(getApplicationContext(),"Connected",Toast.LENGTH_LONG).show();
                 tvStatus.setText("Connected");
+                isRetry = false;
+                retryCount = retry;
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -588,6 +609,7 @@ public class BLEConnection extends AppCompatActivity {
                 tvStatus.setText("Disconnected");
                 deleteBondInformation(mGatt.getDevice());
                 close();
+                doRetry();
                 //  toggle.setEnabled(false);
             }  else if (ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(EXTRA_DATA));
@@ -609,6 +631,18 @@ public class BLEConnection extends AppCompatActivity {
             }
         }
     };
+
+    public void doRetry() {
+        if (isRetry &&  retryCount < retry) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            dialog.setMessage("Retrying");
+            dialog.show();
+            scanLeDevice(true);
+            retryCount+=1;
+        }
+    }
     public static void deleteBondInformation(BluetoothDevice device)
     {
         try

@@ -106,6 +106,20 @@
         android:inputType="textPersonName"
         android:hint="Enter Timeout" />
 
+    <TextView
+        android:id="@+id/tvRetry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Retry" />
+
+    <EditText
+        android:id="@+id/retryET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Retry" />
+
     <Button
         android:id="@+id/saveBtn"
         android:layout_width="match_parent"
