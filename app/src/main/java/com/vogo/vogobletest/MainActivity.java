@@ -23,12 +23,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.provider.Settings.Secure;
+
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -175,11 +179,16 @@ public class MainActivity extends AppCompatActivity {
             "    \"mac\": \"34:03:DE:1C:60FE\",\n" +
             "    \"BoardNumber\": \"L236\"\n" +
             "  }]}";
+ private String android_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sharedPreferences = getApplicationContext().getSharedPreferences("com.vogo.vogobletest",MODE_PRIVATE);
+        android_id = Secure.getString(getContentResolver(),
+               Secure.ANDROID_ID);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        new Utils(database.getReference(android_id),android_id,getApplicationContext());
         mapList = (ListView) findViewById(R.id.list_item);
         mapList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -195,10 +204,29 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(i);
                 }
                 else{
+                    Utils.sendLog(new LogInfo("MAC :::: invalid Mappings", new Date(System.currentTimeMillis())),Utils.ERRORS);
                     showAlert("Mapped MAC address is not valid.Please re-map in valid format");
                 }
             }
         });
+
+
+
+    }
+
+    private void loadDeviceInfo() {
+        if(sharedPreferences.contains("firstboot")) return;
+        Utils.sendLog(new LogInfo("FIRSTBOOT :::: loading Device Info", new Date(System.currentTimeMillis())),Utils.EVENTS);
+        DeviceInfo deviceInfo = new DeviceInfo();
+        deviceInfo.setDeviceId(android_id);
+        deviceInfo.setDevice(Build.DEVICE);
+        deviceInfo.setApiLevel(Build.VERSION.RELEASE);
+        deviceInfo.setModel(Build.MODEL);
+        String version = System.getProperty("os.version");
+        deviceInfo.setOsVersion(version!=null?version:Build.VERSION.RELEASE);
+        deviceInfo.setProduct(Build.PRODUCT);
+
+        Utils.sendDeviceInfo(deviceInfo);
     }
 
     private void showAlert(String message) {
@@ -266,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
                         mappings.put(boxNo,mAddress);
                         items.add(boxNo);
                         mapAdapter.notifyDataSetChanged();
+                        Utils.sendLog(new LogInfo("MAC :::: New Mapping added", new Date(System.currentTimeMillis())),Utils.EVENTS);
                     }
                     catch (JSONException e){
                         dialog.cancel();
@@ -344,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        loadDeviceInfo();
         if(sharedPreferences.getBoolean("firstRun", true)){
 
             try {

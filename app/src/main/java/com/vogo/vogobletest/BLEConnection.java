@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -97,6 +98,7 @@ public class BLEConnection extends AppCompatActivity {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             Log.i("onConnectionStateChange", "Status: " + status);
+            Utils.sendLog(new LogInfo("On Bluetooth Connection Change ::::: Status: " + status, new Date(System.currentTimeMillis())),Utils.EVENTS);
             String intentAction;
             switch (newState) {
                 case BluetoothProfile.STATE_CONNECTED:
@@ -107,16 +109,19 @@ public class BLEConnection extends AppCompatActivity {
                     Log.i("BLE", "Attempting to start service discovery:" +
                             gatt.discoverServices());
                     Log.i("gattCallback", "STATE_CONNECTED");
+                    Utils.sendLog(new LogInfo("Connected to GATT server", new Date(System.currentTimeMillis())),Utils.EVENTS);
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
                     Log.e("gattCallback", "STATE_DISCONNECTED");
                     intentAction = ACTION_GATT_DISCONNECTED;
                     mConnectionState = STATE_DISCONNECTED;
                     Log.i("BLE", "Disconnected from GATT server.");
+                    Utils.sendLog(new LogInfo("Disconnected from GATT server.", new Date(System.currentTimeMillis())),Utils.EVENTS);
                     broadcastUpdate(intentAction);
                     break;
                 default:
                     Log.e("gattCallback", "STATE_OTHER");
+                    Utils.sendLog(new LogInfo("Other Connection State", new Date(System.currentTimeMillis())),Utils.EVENTS);
             }
 
         }
@@ -125,12 +130,14 @@ public class BLEConnection extends AppCompatActivity {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             BluetoothGattService services = gatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
             Log.i("onServicesDiscovered", services.toString());
+            Utils.sendLog(new LogInfo("BLE Service Discovered.", new Date(System.currentTimeMillis())),Utils.EVENTS);
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
             characteristic = services.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
             notifyService(true);
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                Utils.sendLog(new LogInfo("Service Connection Success", new Date(System.currentTimeMillis())),Utils.SUCCESS);
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             }
         }
@@ -140,6 +147,7 @@ public class BLEConnection extends AppCompatActivity {
                                          BluetoothGattCharacteristic
                                                  characteristic, int status) {
             Log.i("onCharacteristicRead", new String(characteristic.getValue()));
+            Utils.sendLog(new LogInfo("Red value from BLE", new Date(System.currentTimeMillis())),Utils.EVENTS);
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
@@ -149,6 +157,7 @@ public class BLEConnection extends AppCompatActivity {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
             Log.i("onCharacteristic", new String(characteristic.getValue()));
+            Utils.sendLog(new LogInfo("Red value from BLE", new Date(System.currentTimeMillis())),Utils.EVENTS);
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
     };
@@ -156,9 +165,11 @@ public class BLEConnection extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bleconnection);
+        Utils.sendLog(new LogInfo("BLE Connection Activity Started", new Date(System.currentTimeMillis())),Utils.EVENTS);
         Bundle bundle = getIntent().getExtras();
         boxNumber = bundle.getString("mBoxNo");
         macAddress = bundle.getString("mAddress");
+        Utils.sendLog(new LogInfo("Mac Address of BLE: "+macAddress, new Date(System.currentTimeMillis())),Utils.EVENTS);
         Log.d("check mac",macAddress);
         tvBox = (TextView) findViewById(R.id.boxTv);
         tvMac = (TextView) findViewById(R.id.macTv);
@@ -177,11 +188,13 @@ public class BLEConnection extends AppCompatActivity {
         mBluetoothAdapter = bluetoothManager.getAdapter();
         mHandler = new Handler();
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Utils.sendLog(new LogInfo("BLE Not Supported", new Date(System.currentTimeMillis())),Utils.ERRORS);
             Toast.makeText(this, "BLE Not Supported",
                     Toast.LENGTH_SHORT).show();
+
             finish();
         }
-
+        Utils.sendLog(new LogInfo("BLE Supported", new Date(System.currentTimeMillis())),Utils.SUCCESS);
         tvBox.setText(boxNumber);
         tvMac.setText(macAddress);
         etDelay.setText(String.valueOf(millis));
@@ -195,6 +208,7 @@ public class BLEConnection extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.sendLog(new LogInfo("Start Button Clicked", new Date(System.currentTimeMillis())),Utils.EVENTS);
                 Log.d("BLE","start");
                 cmdBLE = cmdIgnitionOn;
                 if (dialog.isShowing()) {
@@ -208,6 +222,7 @@ public class BLEConnection extends AppCompatActivity {
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.sendLog(new LogInfo("Stop Button Clicked", new Date(System.currentTimeMillis())),Utils.SUCCESS);
                 cmdBLE = cmdIgnitionOff;
                 if (dialog.isShowing()) {
                     dialog.dismiss();
@@ -221,6 +236,7 @@ public class BLEConnection extends AppCompatActivity {
         btnSeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.sendLog(new LogInfo("Seat Button Clicked", new Date(System.currentTimeMillis())),Utils.SUCCESS);
             cmdBLE = cmdSeatLockOpen;
                 if (dialog.isShowing()) {
                     dialog.dismiss();
@@ -234,6 +250,7 @@ public class BLEConnection extends AppCompatActivity {
         btnEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.sendLog(new LogInfo("End Button Clicked", new Date(System.currentTimeMillis())),Utils.SUCCESS);
                 cmdBLE = cmdEndRide;
                 if (dialog.isShowing()) {
                     dialog.dismiss();
@@ -249,8 +266,10 @@ public class BLEConnection extends AppCompatActivity {
 
     private void prepareBLE() {
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+            Utils.sendLog(new LogInfo("Bluetooth Disabled", new Date(System.currentTimeMillis())),Utils.ERRORS);
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
         } else {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(ACTION_GATT_CONNECTED);
@@ -279,6 +298,7 @@ public class BLEConnection extends AppCompatActivity {
                         BluetoothDevice btDevice = result.getDevice();
                         Log.d("device", btDevice.getAddress());
                         if (btDevice.getAddress().equalsIgnoreCase(macAddress)) {
+                            Utils.sendLog(new LogInfo("Device Discovered", new Date(System.currentTimeMillis())),Utils.SUCCESS);
                             connectToDevice(btDevice);
                         }
                     }
@@ -291,12 +311,14 @@ public class BLEConnection extends AppCompatActivity {
                     }
                     @Override
                     public void onScanFailed(int errorCode) {
+                        Utils.sendLog(new LogInfo("Scan Failed", new Date(System.currentTimeMillis())),Utils.ERRORS);
                         Log.e("Scan Failed", "Error Code: " + errorCode);
                     }
                 };
             }
             else{
                 // For old version of android.
+                Utils.sendLog(new LogInfo("Older Version of Android", new Date(System.currentTimeMillis())),Utils.EVENTS);
                 mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
                     @Override
                     public void onLeScan(final BluetoothDevice device, int rssi,
@@ -305,6 +327,7 @@ public class BLEConnection extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Log.i("onLeScan", device.toString());
+                                Utils.sendLog(new LogInfo("Scanning", new Date(System.currentTimeMillis())),Utils.EVENTS);
                                 if (device.getAddress().equalsIgnoreCase(macAddress)) {
                                     connectToDevice(device);
                                 }
@@ -321,12 +344,14 @@ public class BLEConnection extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i("result", "On resume");
+        Utils.sendLog(new LogInfo("APP Resume", new Date(System.currentTimeMillis())),Utils.EVENTS);
         prepareBLE();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Utils.sendLog(new LogInfo("APP Pause", new Date(System.currentTimeMillis())),Utils.EVENTS);
         if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
             scanLeDevice(false);
         }
@@ -335,6 +360,7 @@ public class BLEConnection extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Utils.sendLog(new LogInfo("APP Destroy", new Date(System.currentTimeMillis())),Utils.EVENTS);
         unregisterReceiver(mGattUpdateReceiver);
         if (dialog.isShowing()) {
             dialog.dismiss();
@@ -351,6 +377,7 @@ public class BLEConnection extends AppCompatActivity {
         if (requestCode == REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Bluetooth not enabled.
+                Utils.sendLog(new LogInfo("BLUETOOTH NOT ENABLED", new Date(System.currentTimeMillis())),Utils.ERRORS);
                 finish();
                 return;
             }
@@ -361,6 +388,8 @@ public class BLEConnection extends AppCompatActivity {
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             Toast.makeText(this,"Searching",Toast.LENGTH_SHORT).show();
+
+            Utils.sendLog(new LogInfo("Searching", new Date(System.currentTimeMillis())),Utils.EVENTS);
 //            mHandler.postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
@@ -378,6 +407,7 @@ public class BLEConnection extends AppCompatActivity {
             }
         } else {
             Toast.makeText(this,"Searching Stopped",Toast.LENGTH_SHORT).show();
+            Utils.sendLog(new LogInfo("Searching Stopped", new Date(System.currentTimeMillis())),Utils.EVENTS);
             if (Build.VERSION.SDK_INT < 21) {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
             } else {
@@ -392,6 +422,7 @@ public class BLEConnection extends AppCompatActivity {
             final String action = intent.getAction();
             if (ACTION_GATT_CONNECTED.equals(action)) {
                 Toast.makeText(getApplicationContext(),"Connected",Toast.LENGTH_LONG).show();
+                Utils.sendLog(new LogInfo("BLE Device Connected", new Date(System.currentTimeMillis())),Utils.EVENTS);
                 tvStatus.setText("Connected");
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -402,6 +433,7 @@ public class BLEConnection extends AppCompatActivity {
                 //  toggle.setEnabled(true);
             } else if (ACTION_GATT_DISCONNECTED.equals(action)) {
                 Toast.makeText(getApplicationContext(),"Disconnected",Toast.LENGTH_LONG).show();
+                Utils.sendLog(new LogInfo("BLE Device Disconnected", new Date(System.currentTimeMillis())),Utils.EVENTS);
                 tvStatus.setText("Disconnected");
                 deleteBondInformation(mGatt.getDevice());
                 close();
@@ -411,10 +443,12 @@ public class BLEConnection extends AppCompatActivity {
             }
             else if(ACTION_GATT_SERVICES_DISCOVERED.equals(action)){
                 Toast.makeText(getApplicationContext(),"Service Found",Toast.LENGTH_LONG).show();
+                Utils.sendLog(new LogInfo("BLE Device Service Found", new Date(System.currentTimeMillis())),Utils.EVENTS);
                 Log.d("BLE read",""+send(cmdBLE.getBytes()));
             }
             else if(BluetoothDevice.ACTION_PAIRING_REQUEST.equals(action)){
                 Log.d("Pairing Request", "Pairing");
+                Utils.sendLog(new LogInfo("BLE Device Paring Request", new Date(System.currentTimeMillis())),Utils.EVENTS);
                 final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 int type = intent.getIntExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.ERROR);
 
@@ -451,27 +485,33 @@ public class BLEConnection extends AppCompatActivity {
         );
          if(stringExtra.equalsIgnoreCase("401")) {
             Toast.makeText(this,stringExtra + "Success",Toast.LENGTH_LONG).show();
+             Utils.sendLog(new LogInfo(stringExtra + "SUCCESS", new Date(System.currentTimeMillis())),Utils.EVENTS);
             showDialog("Success");
             Log.d("BLE", "done");
         }
          else if(stringExtra.equalsIgnoreCase("40")) {
              Toast.makeText(this,stringExtra + "Success",Toast.LENGTH_LONG).show();
+             Utils.sendLog(new LogInfo(stringExtra + "SUCCESS", new Date(System.currentTimeMillis())),Utils.EVENTS);
              showDialog("Success");
              Log.d("BLE", "done");
          }
          else if(stringExtra.equalsIgnoreCase("400")) {
              // showDialog("Please Properly Lock Dicky");
              showDialog("Success");
+             Utils.sendLog(new LogInfo(stringExtra + "SUCCESS", new Date(System.currentTimeMillis())),Utils.EVENTS);
          }
          else if(stringExtra.equalsIgnoreCase("411")){
+             Utils.sendLog(new LogInfo(stringExtra + "FAILURE", new Date(System.currentTimeMillis())),Utils.EVENTS);
              showDialog("Please Turn off ignition");
 
          }
          else if(stringExtra.equalsIgnoreCase("41")){
+             Utils.sendLog(new LogInfo(stringExtra + "FAILURE", new Date(System.currentTimeMillis())),Utils.EVENTS);
              showDialog("Please Turn off ignition");
 
          }
          else if(stringExtra.equalsIgnoreCase("410")){
+             Utils.sendLog(new LogInfo(stringExtra + "FAILURE", new Date(System.currentTimeMillis())),Utils.EVENTS);
              showDialog("Please Turn off ignition");
 //             showDialog("Please Turn off ignition and lock the seat");
          }
@@ -509,11 +549,13 @@ public class BLEConnection extends AppCompatActivity {
     public boolean send(byte[] data) {
         if (mGatt == null || characteristic == null) {
             Log.w("BLE", "BluetoothGatt not initialized");
+            Utils.sendLog(new LogInfo("SEND :::: BluetoothGatt not initialized", new Date(System.currentTimeMillis())),Utils.ERRORS);
             return false;
         }
 
 
         if (characteristic == null) {
+            Utils.sendLog(new LogInfo("SEND :::: Send characteristic not found", new Date(System.currentTimeMillis())),Utils.ERRORS);
             Log.w("BLE", "Send characteristic not found");
             return false;
         }
@@ -524,6 +566,7 @@ public class BLEConnection extends AppCompatActivity {
         catch(InterruptedException e){
 
         }
+        Utils.sendLog(new LogInfo("SEND :::: Sending", new Date(System.currentTimeMillis())),Utils.EVENTS);
         characteristic.setValue(data);
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         return mGatt.writeCharacteristic(characteristic);
@@ -536,12 +579,14 @@ public class BLEConnection extends AppCompatActivity {
     public boolean notifyService(boolean yes) {
         if (mGatt == null || characteristic == null) {
             Log.w("BLE", "BluetoothGatt not initialized");
+            Utils.sendLog(new LogInfo("REG_NOTIFY :::: BluetoothGatt not initialized", new Date(System.currentTimeMillis())),Utils.ERRORS);
             return false;
         }
 
 
         if (characteristic == null) {
             Log.w("BLE", "Send characteristic not found");
+            Utils.sendLog(new LogInfo("REG_NOTIFY :::: characteristic not found", new Date(System.currentTimeMillis())),Utils.ERRORS);
             return false;
         }
         Log.d("Charac",String.valueOf(characteristic.getDescriptors().size()));
@@ -551,6 +596,7 @@ public class BLEConnection extends AppCompatActivity {
             d.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             break;
         }
+        Utils.sendLog(new LogInfo("REG_NOTIFY :::: done", new Date(System.currentTimeMillis())),Utils.SUCCESS);
         return mGatt.setCharacteristicNotification(characteristic,yes);
     }
     public static boolean hasPermissions(Context context, String... permissions) {
@@ -572,7 +618,7 @@ public class BLEConnection extends AppCompatActivity {
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
-
+        Utils.sendLog(new LogInfo("BROADCASTING :::: Received String", new Date(System.currentTimeMillis())),Utils.EVENTS);
         // For all other profiles, writes the data formatted in HEX.
         final byte[] data = characteristic.getValue();
         if (data != null && data.length > 0) {

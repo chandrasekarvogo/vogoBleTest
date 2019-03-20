@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "85409555779",
+    "firebase_url": "https://vogobletest.firebaseio.com",
+    "project_id": "vogobletest",
+    "storage_bucket": "vogobletest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85409555779:android:a86dcf0a419e8629",
+        "android_client_info": {
+          "package_name": "com.vogo.vogobletest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85409555779-3nnl4bvvpvno5cg6gepgtfhuo17gltvb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo4IdzenR5XI7-kOo9V8Ra_VCGG-DWOGw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85409555779:android:a66d910d2bcab130",
+        "android_client_info": {
+          "package_name": "com.vogo.vogobletestic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85409555779-3vqv6br3q5dh7es4d50cus5o4in9nbq1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vogo.vogobletestic",
+            "certificate_hash": "d76edd8884d0ffcf6a9fe814ebc63ad776af6ec4"
+          }
+        },
+        {
+          "client_id": "85409555779-3nnl4bvvpvno5cg6gepgtfhuo17gltvb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo4IdzenR5XI7-kOo9V8Ra_VCGG-DWOGw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85409555779-3nnl4bvvpvno5cg6gepgtfhuo17gltvb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
