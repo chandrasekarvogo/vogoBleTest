@@ -71,7 +71,7 @@ public class BLEConnection extends AppCompatActivity {
     Button dataSend;
     EditText etData;
 
-    TextView tvAssembled,tvReply,tvDatalimit;
+    TextView tvAssembled,tvReply,tvDatalimit,tvDiscovered;
 //    EditText etDelay;
     private ProgressDialog dialog;
     int millis = 100; //default
@@ -196,6 +196,7 @@ public class BLEConnection extends AppCompatActivity {
         btnSeat = (Button) findViewById(R.id.seat);
         bootSpace = (Button) findViewById(R.id.boot);
         dataSend = (Button) findViewById(R.id.btn_send);
+        tvDiscovered = (TextView) findViewById(R.id.tvDiscovered);
         //etDelay = (EditText) findViewById(R.id.etDelay);
         dialog = new ProgressDialog(this);
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
@@ -479,6 +480,7 @@ public class BLEConnection extends AppCompatActivity {
                         BluetoothDevice btDevice = result.getDevice();
                         Log.d("device", btDevice.getAddress());
                         if (btDevice.getAddress().equalsIgnoreCase(macAddress)) {
+                            tvDiscovered.setText("Discovered:"+result.getRssi());
                             connectToDevice(btDevice);
                         }
                     }
@@ -499,13 +501,14 @@ public class BLEConnection extends AppCompatActivity {
                 // For old version of android.
                 mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
                     @Override
-                    public void onLeScan(final BluetoothDevice device, int rssi,
+                    public void onLeScan(final BluetoothDevice device, final int rssi,
                                          byte[] scanRecord) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 Log.i("onLeScan", device.toString());
                                 if (device.getAddress().equalsIgnoreCase(macAddress)) {
+                                    tvDiscovered.setText("Discovered:"+rssi);
                                     connectToDevice(device);
                                 }
                             }
