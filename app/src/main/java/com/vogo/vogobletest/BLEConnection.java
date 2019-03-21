@@ -52,10 +52,12 @@ public class BLEConnection extends AppCompatActivity {
     String cmdEndRide;
     TextView tvBox, tvMac, tvStatus;
     Button btnStart,btnEnd,btnStop,btnSeat;
-    EditText etDelay;
     private ProgressDialog dialog;
     int millis = 100; //default
-
+TextView tvReceived;
+TextView tvDiscovered;
+    int retry = 1,retryCount = 0;
+    boolean isRetry = true;
 
     public final static String ACTION_GATT_CONNECTED =
             "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
@@ -178,7 +180,8 @@ public class BLEConnection extends AppCompatActivity {
         btnEnd = (Button) findViewById(R.id.end);
         btnStop = (Button) findViewById(R.id.stop);
         btnSeat = (Button) findViewById(R.id.seat);
-        etDelay = (EditText) findViewById(R.id.etDelay);
+        tvReceived = (TextView) findViewById(R.id.tvReceived);
+        tvDiscovered = (TextView) findViewById(R.id.tvDiscovered);
         dialog = new ProgressDialog(this);
         if(!hasPermissions(this, PERMISSIONS)){
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
@@ -197,14 +200,13 @@ public class BLEConnection extends AppCompatActivity {
         Utils.sendLog(new LogInfo("BLE Supported", new Date(System.currentTimeMillis())),Utils.SUCCESS);
         tvBox.setText(boxNumber);
         tvMac.setText(macAddress);
-        etDelay.setText(String.valueOf(millis));
         sharedPreferences = getApplicationContext().getSharedPreferences("com.vogo.vogobletest",MODE_PRIVATE);
         blePass = sharedPreferences.getString(Constants.BLE_PASS,Config.DEFAULT_PASS);
         cmdIgnitionOn = sharedPreferences.getString(Constants.IGNITION_ON,Config.DEFAULT_IGNITION_ON);
         cmdIgnitionOff = sharedPreferences.getString(Constants.IGNITION_OFF,Config.DEFAULT_IGNITION_OFF);
         cmdSeatLockOpen = sharedPreferences.getString(Constants.SEAT_OPEN,Config.DEFAULT_SEAT_OPEN);
         cmdEndRide = sharedPreferences.getString(Constants.END_RIDE,Config.DEFAULT_END_RIDE);
-
+        retry = sharedPreferences.getInt(Settings.RETRY,1);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -216,6 +218,9 @@ public class BLEConnection extends AppCompatActivity {
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
+
+                isRetry = true;
+                retryCount = 0;
                 scanLeDevice(true);
             }
         });
@@ -229,6 +234,9 @@ public class BLEConnection extends AppCompatActivity {
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
+
+                isRetry = true;
+                retryCount = 0;
                 scanLeDevice(true);
             }
         });
@@ -243,6 +251,9 @@ public class BLEConnection extends AppCompatActivity {
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
+
+                isRetry = true;
+                retryCount = 0;
             scanLeDevice(true);
             }
         });
@@ -257,6 +268,9 @@ public class BLEConnection extends AppCompatActivity {
                 }
                 dialog.setMessage("Connecting");
                 dialog.show();
+
+                isRetry = true;
+                retryCount = 0;
                 scanLeDevice(true);
             }
         });
@@ -298,6 +312,7 @@ public class BLEConnection extends AppCompatActivity {
                         BluetoothDevice btDevice = result.getDevice();
                         Log.d("device", btDevice.getAddress());
                         if (btDevice.getAddress().equalsIgnoreCase(macAddress)) {
+                            tvDiscovered.setText("Device Discovered:"+ result.getRssi());
                             Utils.sendLog(new LogInfo("Device Discovered", new Date(System.currentTimeMillis())),Utils.SUCCESS);
                             connectToDevice(btDevice);
                         }
@@ -321,7 +336,7 @@ public class BLEConnection extends AppCompatActivity {
                 Utils.sendLog(new LogInfo("Older Version of Android", new Date(System.currentTimeMillis())),Utils.EVENTS);
                 mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
                     @Override
-                    public void onLeScan(final BluetoothDevice device, int rssi,
+                    public void onLeScan(final BluetoothDevice device, final int rssi,
                                          byte[] scanRecord) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -329,6 +344,7 @@ public class BLEConnection extends AppCompatActivity {
                                 Log.i("onLeScan", device.toString());
                                 Utils.sendLog(new LogInfo("Scanning", new Date(System.currentTimeMillis())),Utils.EVENTS);
                                 if (device.getAddress().equalsIgnoreCase(macAddress)) {
+                                    tvDiscovered.setText("Device Discovered:"+ rssi);
                                     connectToDevice(device);
                                 }
                             }
@@ -416,6 +432,17 @@ public class BLEConnection extends AppCompatActivity {
         }
     }
 
+    public void doRetry() {
+        if (isRetry &&  retryCount < retry) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            dialog.setMessage("Retrying");
+            dialog.show();
+            scanLeDevice(true);
+            retryCount+=1;
+        }
+    }
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -424,12 +451,14 @@ public class BLEConnection extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Connected",Toast.LENGTH_LONG).show();
                 Utils.sendLog(new LogInfo("BLE Device Connected", new Date(System.currentTimeMillis())),Utils.EVENTS);
                 tvStatus.setText("Connected");
+                isRetry = false;
+                retryCount = retry;
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                          // disconnect from BLE
                     }
-                },20000);
+                },(sharedPreferences.getInt(Settings.TIMEOUT,1000*20)>1000*20?sharedPreferences.getInt(Settings.TIMEOUT,1000*20):1000*20));
                 //  toggle.setEnabled(true);
             } else if (ACTION_GATT_DISCONNECTED.equals(action)) {
                 Toast.makeText(getApplicationContext(),"Disconnected",Toast.LENGTH_LONG).show();
@@ -474,13 +503,16 @@ public class BLEConnection extends AppCompatActivity {
     }
     public void close() {
         if (mGatt == null) {
+            doRetry();
             return;
         }
         mGatt.close();
         mGatt = null;
+
+        doRetry();
     }
     private void displayData(String stringExtra) {
-
+        tvReceived.setText(stringExtra);
         Log.d("BLE readings", stringExtra
         );
          if(stringExtra.equalsIgnoreCase("401")) {
@@ -560,8 +592,7 @@ public class BLEConnection extends AppCompatActivity {
             return false;
         }
         try{
-            String delay = etDelay.getText().toString().trim().replaceAll("[^0-9]", "");
-            millis = Integer.valueOf(!delay.contentEquals("")?delay:"100");
+            millis = sharedPreferences.getInt(Settings.DELAY,100);
             Thread.sleep(millis);}
         catch(InterruptedException e){
 

@@ -31,7 +31,20 @@
         android:text="status"
         android:padding="10dp"
         android:id="@+id/statusTv"/>
-<LinearLayout
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Discovery Status:" />
+
+    <TextView
+        android:id="@+id/tvDiscovered"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="not discovered" />
+
+    <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -77,14 +90,13 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Delay" />
+        android:text="Received data:" />
 
-    <EditText
-        android:id="@+id/etDelay"
+    <TextView
+        android:id="@+id/tvReceived"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="phone"
-        android:maxLength="4"/>
+        android:hint="" />
+
 
 </LinearLayout>
