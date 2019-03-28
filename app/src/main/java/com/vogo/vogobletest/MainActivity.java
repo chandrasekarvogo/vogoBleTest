@@ -238,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.settting:
                 startActivity(new Intent(this, Settings.class));
                 return true;
+            case R.id.search:
+                startActivity(new Intent(this, SearchActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -601,18 +601,19 @@ public class BLEConnection extends AppCompatActivity {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                         // disconnect from BLE
-                        deleteBondInformation(mGatt.getDevice());
-                        close();
+                        if(mGatt!=null) {
+                            // disconnect from BLE
+                            deleteBondInformation(mGatt.getDevice());
+                            close();
+                        }
                     }
-                },(sharedPreferences.getInt(Settings.TIMEOUT,1000*20)>1000*20?sharedPreferences.getInt(Settings.TIMEOUT,1000*20):1000*20));
+                },sharedPreferences.getInt(Settings.TIMEOUT,1000*20));
                 //  toggle.setEnabled(true);
             } else if (ACTION_GATT_DISCONNECTED.equals(action)) {
                 Toast.makeText(getApplicationContext(),"Disconnected",Toast.LENGTH_LONG).show();
                 tvStatus.setText("Disconnected");
                 deleteBondInformation(mGatt.getDevice());
                 close();
-                doRetry();
                 //  toggle.setEnabled(false);
             }  else if (ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(EXTRA_DATA));
@@ -648,22 +649,22 @@ public class BLEConnection extends AppCompatActivity {
     }
     public static void deleteBondInformation(BluetoothDevice device)
     {
-        try
-        {
+        try {
             Method m = device.getClass().getMethod("removeBond", (Class[]) null);
             m.invoke(device, (Object[]) null);
+        } catch (Exception e) {
+            Log.e("BLE", e.getMessage());
         }
-        catch (Exception e)
-        {
-            Log.e("BLE",e.getMessage());
-        }
+
     }
     public void close() {
         if (mGatt == null) {
+            doRetry();
             return;
         }
         mGatt.close();
         mGatt = null;
+        doRetry();
     }
     private void displayData(String stringExtra) {
 
@@ -802,7 +803,7 @@ public class BLEConnection extends AppCompatActivity {
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             for(byte byteChar : data)
-                stringBuilder.append(String.format("%02X ", byteChar));
+                stringBuilder.append(String.format("%02X", byteChar));
             intent.putExtra(EXTRA_DATA, new String(data));
 
         }
