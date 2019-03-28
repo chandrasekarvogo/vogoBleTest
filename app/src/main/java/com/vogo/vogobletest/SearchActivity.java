@@ -43,7 +43,8 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("BLE","list click");
-                String selectedItem = items.get(position);
+
+                String selectedItem = String.valueOf(mapList.getItemAtPosition(position));
                 String macAddress = mapping.get(selectedItem);
                 if(macAddress!=null && !macAddress.equalsIgnoreCase("") && validate(macAddress)){
                     Intent i = new Intent(SearchActivity.this, BLEConnection.class);
