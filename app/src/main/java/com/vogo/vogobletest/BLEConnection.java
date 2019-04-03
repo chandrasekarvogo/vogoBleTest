@@ -563,6 +563,10 @@ public class BLEConnection extends AppCompatActivity {
 
     private void scanLeDevice(final boolean enable) {
         if (enable) {
+            /**
+             * Reset the reply textview for new connection
+             */
+            tvReply.setText("");
             Toast.makeText(this,"Searching",Toast.LENGTH_SHORT).show();
 //            mHandler.postDelayed(new Runnable() {
 //                @Override
