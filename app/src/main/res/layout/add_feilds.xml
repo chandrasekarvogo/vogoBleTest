@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20px">
+
+    <EditText
+        android:id="@+id/feildNameTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Feild Name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/feildTx"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Tx value"
+        android:inputType="textPersonName" />
+    <EditText
+        android:id="@+id/feildRx"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Rx value"
+        android:inputType="textPersonName" />
+</LinearLayout>

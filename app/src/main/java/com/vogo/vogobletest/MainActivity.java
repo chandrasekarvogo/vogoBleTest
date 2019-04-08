@@ -1,6 +1,7 @@
 package com.vogo.vogobletest;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -236,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 showAddDialog();
                 return true;
             case R.id.settting:
-                startActivity(new Intent(this, Settings.class));
+                showPasswordDialog();
                 return true;
             case R.id.search:
                 startActivity(new Intent(this, SearchActivity.class));
@@ -244,7 +246,69 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    private void showPasswordDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Password");
+        final View viewInflated = LayoutInflater.from(this).inflate(R.layout.password_layout, null);
+        builder.setView(viewInflated);
+        final Context context =this;
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
+                EditText password = (EditText)viewInflated.findViewById(R.id.password);
+                String pass = password.getText().toString();
+
+                if(!pass.equalsIgnoreCase("") && pass.contentEquals("3299")) {
+                    startActivity(new Intent(context, Settings.class));
+                }
+                else{
+                    dialog.cancel();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        final EditText pass = (EditText)viewInflated.findViewById(R.id.password);
+
+        pass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(s)) {
+                    // Disable ok button
+                    ((AlertDialog) dialog).getButton(
+                            AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                } else if(s.toString().contentEquals("3299")) {
+                    // Something into edit text. Enable the button.
+                    ((AlertDialog) dialog).getButton(
+                            AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                }
+            }
+        });
+
+
+        ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                .setEnabled(false);
+    }
     private void showAddDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("New Mapping");

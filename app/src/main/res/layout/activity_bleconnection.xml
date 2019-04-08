@@ -65,25 +65,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/macTv">
 
-            <EditText
-                android:id="@+id/etStartTx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="tx"
-                android:inputType="text" />
-
-            <EditText
-                android:id="@+id/etStartRx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="rx"
-                android:inputType="text" />
 
             <Button
                 android:id="@+id/start"
-                android:layout_width="50dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="15dp"
@@ -101,25 +86,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-            <EditText
-                android:id="@+id/etStopTx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="tx"
-                android:inputType="text" />
 
-            <EditText
-                android:id="@+id/etStopRx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="rx"
-                android:inputType="text" />
+
+
 
             <Button
                 android:id="@+id/stop"
-                android:layout_width="50dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="15dp"
@@ -137,25 +110,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
-            <EditText
-                android:id="@+id/etSeatTx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="tx"
-                android:inputType="text" />
 
-            <EditText
-                android:id="@+id/etSeatRx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="rx"
-                android:inputType="text" />
 
             <Button
                 android:id="@+id/seat"
-                android:layout_width="50dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="15dp"
@@ -174,25 +133,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
-            <EditText
-                android:id="@+id/etEndTx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="tx"
-                android:inputType="text" />
 
-            <EditText
-                android:id="@+id/etEndRx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="rx"
-                android:inputType="text" />
 
             <Button
                 android:id="@+id/end"
-                android:layout_width="50dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="15dp"
@@ -213,31 +158,29 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
 
-            <EditText
-                android:id="@+id/etBootTx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="tx"
-                android:inputType="text" />
 
-            <EditText
-                android:id="@+id/etBootRx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="rx"
-                android:inputType="text" />
 
             <Button
                 android:id="@+id/boot"
-                android:layout_width="50dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="15dp"
+                android:layout_gravity="center_vertical"
                 android:text="BootSpace" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            android:id="@+id/buttonGroup"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
 
+        </LinearLayout>
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
@@ -257,7 +200,7 @@
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+            app:layout_constraintTop_toBottomOf="@+id/buttonGroup"
             android:visibility="invisible">
 
             <TextView
@@ -359,5 +302,44 @@
             app:layout_constraintStart_toEndOf="@+id/boxTv"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Connection Time:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDiscovered" />
+
+        <TextView
+            android:id="@+id/tv_connectionTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.088"
+            app:layout_constraintStart_toEndOf="@+id/textView13"
+            app:layout_constraintTop_toBottomOf="@+id/tvDiscovered" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Data Transfer Time:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+        <TextView
+            android:id="@+id/tv_data_transfer_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text=""
+            app:layout_constraintTop_toBottomOf="@+id/tvDiscovered"
+            app:layout_constraintStart_toEndOf="@+id/textView15"
+            app:layout_constraintTop_toTopOf="@+id/textView15" />
 
     </android.support.constraint.ConstraintLayout></ScrollView>
