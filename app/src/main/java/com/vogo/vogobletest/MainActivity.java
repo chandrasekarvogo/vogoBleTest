@@ -46,136 +46,140 @@ public class MainActivity extends AppCompatActivity {
     List<String> items;
     String json = "{\"sample\":[\n" +
             "  {\n" +
-            "    \"mac\": \"7C:01:0A:5B:E5:2A\",\n" +
-            "    \"BoardNumber\": \"L293\"\n" +
+            "    \"mac\": \"6C:C3:74:F3:BB:4C\",\n" +
+            "    \"vehicle\": \"KA 05 AH 8829\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:7B:C5:72\",\n" +
-            "    \"BoardNumber\": \"L289\"\n" +
+            "    \"mac\": \"90:E2:02:02:0E:FC\",\n" +
+            "    \"vehicle\": \"KA 03 AG 4825\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"34:15:13:CF:53:98\",\n" +
-            "    \"BoardNumber\": \"L294\"\n" +
+            "    \"mac\": \"A8:10:87:1B:77:DD\",\n" +
+            "    \"vehicle\": \"KA 51 AC 1191\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:7B:C5:21\",\n" +
-            "    \"BoardNumber\": \"L284\"\n" +
+            "    \"mac\": \"90:E2:02:05:23:F5\",\n" +
+            "    \"vehicle\": \"KA 05 AH 6546\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:79:C8:B8\",\n" +
-            "    \"BoardNumber\": \"L291\"\n" +
+            "    \"mac\": \"B0:7E:11:FF:22:AF\",\n" +
+            "    \"vehicle\": \"KA 05 AH 5952\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:7B:B8:E6\",\n" +
-            "    \"BoardNumber\": \"K927\"\n" +
+            "    \"mac\": \"6C:C3:74:F4:64:02\",\n" +
+            "    \"vehicle\": \"KA 51 AC 6906\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:7B:B8:D3\",\n" +
-            "    \"BoardNumber\": \"L286\"\n" +
+            "    \"mac\": \"B0:7E:11:FF:1E:F3\",\n" +
+            "    \"vehicle\": \"KA 03 AG 5001\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:7B:BC:C1\",\n" +
-            "    \"BoardNumber\": \"L285\"\n" +
+            "    \"mac\": \"90:E2:02:02:05:80\",\n" +
+            "    \"vehicle\": \"KA 51 AB 7604\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:7B:B8:A8\",\n" +
-            "    \"BoardNumber\": \"L288\"\n" +
+            "    \"mac\": \"6C:C3:74:F4:B4:A6\",\n" +
+            "    \"vehicle\": \"KA 03 AG 4856\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"34:15:13:CF:2B:DD\",\n" +
-            "    \"BoardNumber\": \"L290\"\n" +
+            "    \"mac\": \"90:E2:02:02:26:EF\",\n" +
+            "    \"vehicle\": \"KA 03 AG 4998\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"34:15:13:CF:39:EF\",\n" +
-            "    \"BoardNumber\": \"L292\"\n" +
+            "    \"mac\": \"90:E2:02:04:A8:71\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 0528\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"34:15:13:CF:41:FD\",\n" +
-            "    \"BoardNumber\": \"L307\"\n" +
+            "    \"mac\": \"D8:A9:8B:B0:D0:74\",\n" +
+            "    \"vehicle\": \"KA 03 AG 4999\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"34:15:13:CF:50:F0\",\n" +
-            "    \"BoardNumber\": \"L000\"\n" +
+            "    \"mac\": \"D8:A9:8B:B0:ED:E6\",\n" +
+            "    \"vehicle\": \"KA 51 AC 0120\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"34:15:13:CF:47:D2\",\n" +
-            "    \"BoardNumber\": \"L299\"\n" +
+            "    \"mac\": \"90:E2:02:05:19:4B\",\n" +
+            "    \"vehicle\": \"KA 51 AC 1848\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3E:07:12\",\n" +
-            "    \"BoardNumber\": \"L302\"\n" +
+            "    \"mac\": \"6C:C3:74:F3:D3:2A\",\n" +
+            "    \"vehicle\": \"KA 03 AG 4922\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3E:0A:F8\",\n" +
-            "    \"BoardNumber\": \"L300\"\n" +
+            "    \"mac\": \"B0:7E:11:FF:1E:FB\",\n" +
+            "    \"vehicle\": \"KA 05 AH 5660\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3E:79:D2\",\n" +
-            "    \"BoardNumber\": \"L295\"\n" +
+            "    \"mac\": \"90:E2:02:04:6F:BF\",\n" +
+            "    \"vehicle\": \"KA 51 AC 6873\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3D:DB:A8\",\n" +
-            "    \"BoardNumber\": \"L303\"\n" +
+            "    \"mac\": \"6C:C3:74:FC:B1:C7\",\n" +
+            "    \"vehicle\": \"KA 51 AC 6762\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3E:1C:3B\",\n" +
-            "    \"BoardNumber\": \"L298\"\n" +
+            "    \"mac\": \"D8:A9:8B:B0:ED:DE\",\n" +
+            "    \"vehicle\": \"KA 51 AC 1540\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3F:D8:8E\",\n" +
-            "    \"BoardNumber\": \"L305\"\n" +
+            "    \"mac\": \"90:E2:02:B8:01:02\",\n" +
+            "    \"vehicle\": \"KA 05 AH 5980\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3E:07:26\",\n" +
-            "    \"BoardNumber\": \"L304\"\n" +
+            "    \"mac\": \"6C:C3:74:FC:9F:49\",\n" +
+            "    \"vehicle\": \"KA 51 AC 1767\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3E:0E:F7\",\n" +
-            "    \"BoardNumber\": \"L311\"\n" +
+            "    \"mac\": \"90:E2:02:04:87:35\",\n" +
+            "    \"vehicle\": \"KA 05 AH 5321\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3E:0A:90\",\n" +
-            "    \"BoardNumber\": \"L308\"\n" +
+            "    \"mac\": \"90:E2:02:04:BC:45\",\n" +
+            "    \"vehicle\": \"KA 51 AB 7071\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3F:D8:92\",\n" +
-            "    \"BoardNumber\": \"L309\"\n" +
+            "    \"mac\": \"D8:A9:8B:B0:E2:C1\",\n" +
+            "    \"vehicle\": \"KA 51 AC 8328\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3E:71:41\",\n" +
-            "    \"BoardNumber\": \"L310\"\n" +
+            "    \"mac\": \"D8:A9:8B:B0:E6:D7\",\n" +
+            "    \"vehicle\": \"KA 04 AH 5860\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3E:0E:EC\",\n" +
-            "    \"BoardNumber\": \"L306\"\n" +
-            "  },\n" +
-            "{\n" +
-            "    \"mac\": \"0C:B2:B7:7B:B8:E6\",\n" +
-            "    \"BoardNumber\": \"G163\"\n" +
+            "    \"mac\": \"90:E2:02:05:23:97\",\n" +
+            "    \"vehicle\": \"KA 51 AC 0098\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:7B:BC:C1\",\n" +
-            "    \"BoardNumber\": \"L663\"\n" +
+            "    \"mac\": \"6C:C3:74:F4:5C:DA\",\n" +
+            "    \"vehicle\": \"KA 51 AC 1554\"\n" +
+            "  }\n" +
+            ",{\n" +
+            "    \"mac\": \"90:E2:02:05:51:A2\",\n" +
+            "    \"vehicle\": \"KA 51 AC 6851\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:7B:C5:72\",\n" +
-            "    \"BoardNumber\": \"L808\"\n" +
+            "    \"mac\": \"90:E2:02:05:19:59\",\n" +
+            "    \"vehicle\": \"KA 51 AB 7060\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:7B:C5:12\",\n" +
-            "    \"BoardNumber\": \"G275\"\n" +
+            "    \"mac\": \"B0:7E:11:FF:1E:CE\",\n" +
+            "    \"vehicle\": \"KA 51 AC 1544\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"18:62:E4:3C:8E:CC\",\n" +
-            "    \"BoardNumber\": \"L583\"\n" +
+            "    \"mac\": \"6C:C3:74:FC:9F:49\",\n" +
+            "    \"vehicle\": \"KA 03 AG 4933\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"0C:B2:B7:79:CB:4C\",\n" +
-            "    \"BoardNumber\": \"L279\"\n" +
+            "    \"mac\": \"A8:10:87:1C:E9:60\",\n" +
+            "    \"vehicle\": \"KA 03 AG 5002\"\n" +
             "  },\n" +
             "  {\n" +
-            "    \"mac\": \"34:03:DE:1C:60FE\",\n" +
-            "    \"BoardNumber\": \"L236\"\n" +
+            "    \"mac\": \"A8:10:87:21:91:2C\",\n" +
+            "    \"vehicle\": \"KA 05 AH 6303\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"D8:A9:8B:B0:DE:E8\",\n" +
+            "    \"vehicle\": \"KA 51 AC 7275\"\n" +
             "  }]}";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
