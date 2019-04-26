@@ -177,7 +177,7 @@ public class BLEConnection extends AppCompatActivity {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
             Log.i("onCharacteristic", new String(characteristic.getValue()));
-            tvDataTransferTime.setText(System.currentTimeMillis()-dataTransferTimeStart + " ms");
+            //tvDataTransferTime.setText(System.currentTimeMillis()-dataTransferTimeStart + " ms");
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
     };
