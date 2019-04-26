@@ -219,6 +219,30 @@ public class MainActivity extends AppCompatActivity {
             "  {\n" +
             "    \"mac\": \"6C:C3:74:F3:D0:07\",\n" +
             "    \"vehicle\": \"KA 05 AJ 1136\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"90:E2:02:05:19:59\",\n" +
+            "    \"vehicle\": \"KA 51 AB 7060\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"B0:7E:11:FF:1E:CE\",\n" +
+            "    \"vehicle\": \"KA 51 AC 1544\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"6C:C3:74:FC:9F:49\",\n" +
+            "    \"vehicle\": \"KA 03 AG 4933\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"A8:10:87:1C:E9:60\",\n" +
+            "    \"vehicle\": \"KA 03 AG 5002\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"A8:10:87:21:91:2C\",\n" +
+            "    \"vehicle\": \"KA 05 AH 6303\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"D8:A9:8B:B0:DE:E8\",\n" +
+            "    \"vehicle\": \"KA 51 AC 7275\"\n" +
             "  }]}";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
