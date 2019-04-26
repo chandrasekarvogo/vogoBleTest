@@ -179,9 +179,9 @@ public class Settings extends AppCompatActivity {
         commandByte.setText(sharedPreferences.getString(COMMAND_BYTE,"63"));
         dataByte.setText(sharedPreferences.getString(DATA_BYTE,"62"));
         delay.setText(String.valueOf(sharedPreferences.getInt(DELAY,100)));
-        timeout.setText(String.valueOf(sharedPreferences.getInt(TIMEOUT,1000*20)));
+        timeout.setText(String.valueOf(sharedPreferences.getInt(TIMEOUT,1000*2)));
         datalength.setText(String.valueOf(sharedPreferences.getInt(DATA_LENGTH,4)));
-        retry.setText(String.valueOf(sharedPreferences.getInt(RETRY,1)));
+        retry.setText(String.valueOf(sharedPreferences.getInt(RETRY,10)));
 
         etStartTx.setText(sharedPreferences.getString(START_TX,"41"));
         etStartRx.setText(sharedPreferences.getString(START_RX,"2A"));

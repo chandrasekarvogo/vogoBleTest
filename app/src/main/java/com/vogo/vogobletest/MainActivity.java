@@ -180,6 +180,45 @@ public class MainActivity extends AppCompatActivity {
             "  {\n" +
             "    \"mac\": \"D8:A9:8B:B0:DE:E8\",\n" +
             "    \"vehicle\": \"KA 51 AC 7275\"\n" +
+            "  },{\n" +
+            "    \"mac\": \"90:E2:02:02:0A:57\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1182\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"D8:A9:8B:B1:3E:37\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1152\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"6C:C3:74:F4:B4:AA\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1225\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"90:E2:02:01:BB:28\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1249\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"D8:A9:8B:B0:D5:AE\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1175\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"D8:A9:8B:C2:C9:FD\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1252\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"90:E2:02:02:0A:6A\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1126\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"90:E2:02:05:2A:C8\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1229\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"6C:C3:74:F4:55:C6\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1217\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"mac\": \"6C:C3:74:F3:D0:07\",\n" +
+            "    \"vehicle\": \"KA 05 AJ 1136\"\n" +
             "  }]}";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
