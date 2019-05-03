@@ -124,7 +124,11 @@ public class BLEConnection extends AppCompatActivity {
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Log.i("onConnectionStateChange", "Status: " + status);
+            Log.i("onConnectionStateChange", "Status: " + status + newState);
+            if(status == 133){
+                isRetry = false;
+                retryCount = retry;
+            }
             String intentAction;
             switch (newState) {
                 case BluetoothProfile.STATE_CONNECTED:
@@ -132,9 +136,10 @@ public class BLEConnection extends AppCompatActivity {
                     mConnectionState = STATE_CONNECTED;
                     broadcastUpdate(intentAction);
                     Log.i("BLE", "Connected to GATT server.");
-                    Log.i("BLE", "Attempting to start service discovery:" +
-                            gatt.discoverServices());
+                    Log.i("BLE", "Attempting to start service discovery:"
+                           );
                     Log.i("gattCallback", "STATE_CONNECTED");
+                    mGatt.discoverServices();
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
                     Log.e("gattCallback", "STATE_DISCONNECTED");
@@ -210,6 +215,10 @@ public class BLEConnection extends AppCompatActivity {
                 }, sharedPreferences.getInt(Settings.TIMEOUT, 1000 * 20));
                 //  toggle.setEnabled(true);
             } else if (ACTION_GATT_DISCONNECTED.equals(action)) {
+                Log.d("BLE","disconnected Receiver");
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 Toast.makeText(getApplicationContext(), "Disconnected", Toast.LENGTH_LONG).show();
                 tvStatus.setText("Disconnected");
                 deleteBondInformation(mGatt.getDevice());
@@ -244,6 +253,7 @@ public class BLEConnection extends AppCompatActivity {
     private LinearLayout dataModeLayout;
 
     public static void deleteBondInformation(BluetoothDevice device) {
+
         try {
             Method m = device.getClass().getMethod("removeBond", (Class[]) null);
             m.invoke(device, (Object[]) null);
@@ -579,11 +589,18 @@ public class BLEConnection extends AppCompatActivity {
                     public void onScanResult(int callbackType, ScanResult result) {
                         Log.i("callbackType", String.valueOf(callbackType));
                         Log.i("result", result.toString());
-                        BluetoothDevice btDevice = result.getDevice();
+                        final BluetoothDevice btDevice = result.getDevice();
                         Log.d("device", btDevice.getAddress());
                         if (btDevice.getAddress().equalsIgnoreCase(macAddress)) {
                             tvDiscovered.setText("Discovered:" + result.getRssi());
-                            connectToDevice(btDevice);
+                            mGatt = null;
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    connectToDevice(btDevice);
+                                }
+                            },500);
+
                         }
                     }
 
@@ -611,7 +628,12 @@ public class BLEConnection extends AppCompatActivity {
                                 Log.i("onLeScan", device.toString());
                                 if (device.getAddress().equalsIgnoreCase(macAddress)) {
                                     tvDiscovered.setText("Discovered:" + rssi);
-                                    connectToDevice(device);
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            connectToDevice(device);
+                                        }
+                                    },500);
                                 }
                             }
                         });
@@ -775,10 +797,19 @@ public class BLEConnection extends AppCompatActivity {
 
     public void connectToDevice(BluetoothDevice device) {
         if (mGatt == null) {
-            mGatt = device.connectGatt(this, false, gattCallback);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mGatt = device.connectGatt(this, false, gattCallback,2);
+                Log.d("BLE",mGatt.getDevice().getName());
+
+            }
+            else{
+                mGatt = device.connectGatt(this, false, gattCallback);
+
+            }
             scanLeDevice(false);// will stop after first device detection
             tvConnectionTime.setText(System.currentTimeMillis()-connectionTimeStart + " ms");
         }
+
     }
 
     public boolean send(byte[] data) {
