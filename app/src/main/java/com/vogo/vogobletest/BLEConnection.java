@@ -44,14 +44,19 @@ import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.vogo.vogobletest.BLE.BLEBaseActivity;
 
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 
 import static com.vogo.vogobletest.Settings.BOOT_RX;
 import static com.vogo.vogobletest.Settings.BOOT_TX;
@@ -64,7 +69,7 @@ import static com.vogo.vogobletest.Settings.START_TX;
 import static com.vogo.vogobletest.Settings.STOP_RX;
 import static com.vogo.vogobletest.Settings.STOP_TX;
 
-public class BLEConnection extends AppCompatActivity {
+public class BLEConnection extends BLEBaseActivity {
     public final static String ACTION_GATT_CONNECTED =
             "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED =
@@ -347,21 +352,28 @@ public class BLEConnection extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tx = sharedPreferences.getString(START_TX,"41");
-                String rx =sharedPreferences.getString(START_RX,"2A");
-                if (!tx.contentEquals("") && !rx.contentEquals("")) {
-                    Log.d("BLE", "start");
-                    cmdBLE = assembleString(MODE, tx, rx);
-                    cmdBLERx = String.valueOf(toAscii(rx));
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
+                sendActionCommand(BLEType.UNLOCK_IC_BIKE, macAddress, new Function2<BLEType, byte[], Unit>() {
+                    @Override
+                    public Unit invoke(BLEType bleType, byte[] bytes) {
+//                        Log.d("Data", new String(bytes, Charset.forName("UTF-8")));
+                        return Unit.INSTANCE;
                     }
-                    dialog.setMessage("Connecting");
-                    dialog.show();
-                    isRetry = true;
-                    retryCount = 0;
-                    scanLeDevice(true);
-                }
+                });
+//                String tx = sharedPreferences.getString(START_TX,"41");
+//                String rx =sharedPreferences.getString(START_RX,"2A");
+//                if (!tx.contentEquals("") && !rx.contentEquals("")) {
+//                    Log.d("BLE", "start");
+//                    cmdBLE = assembleString(MODE, tx, rx);
+//                    cmdBLERx = String.valueOf(toAscii(rx));
+//                    if (dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    dialog.setMessage("Connecting");
+//                    dialog.show();
+//                    isRetry = true;
+//                    retryCount = 0;
+//                    scanLeDevice(true);
+//                }
             }
         });
         btnStop.setOnClickListener(new View.OnClickListener() {
@@ -407,20 +419,27 @@ public class BLEConnection extends AppCompatActivity {
         btnEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tx = sharedPreferences.getString(END_TX,"45");
-                String rx = sharedPreferences.getString(END_RX,"2E");
-                if (!tx.contentEquals("") && !rx.contentEquals("")) {
-                    cmdBLE = assembleString(MODE, tx, rx);
-                    cmdBLERx = String.valueOf(toAscii(rx));
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
+                sendActionCommand(BLEType.LOCK_IC_BIKE, macAddress, new Function2<BLEType, byte[], Unit>() {
+                    @Override
+                    public Unit invoke(BLEType bleType, byte[] bytes) {
+//                        Log.d("Data", new String(bytes, Charset.forName("UTF-8")));
+                        return Unit.INSTANCE;
                     }
-                    dialog.setMessage("Connecting");
-                    dialog.show();
-                    isRetry = true;
-                    retryCount = 0;
-                    scanLeDevice(true);
-                }
+                });
+//                String tx = sharedPreferences.getString(END_TX,"45");
+//                String rx = sharedPreferences.getString(END_RX,"2E");
+//                if (!tx.contentEquals("") && !rx.contentEquals("")) {
+//                    cmdBLE = assembleString(MODE, tx, rx);
+//                    cmdBLERx = String.valueOf(toAscii(rx));
+//                    if (dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    dialog.setMessage("Connecting");
+//                    dialog.show();
+//                    isRetry = true;
+//                    retryCount = 0;
+//                    scanLeDevice(true);
+//                }
             }
         });
 
